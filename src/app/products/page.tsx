@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useSearchProducts, useProductsByCategory } from '@/hooks/useProducts';
 import { ProductGrid } from '@/components/product/ProductGrid';
@@ -8,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ShoppingBag, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const search = searchParams.get('search') || '';
   const category = searchParams.get('category') || '';
@@ -126,5 +127,17 @@ export default function ProductsPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="bg-white min-h-screen py-32 flex justify-center">
+        <Skeleton className="h-[400px] w-full max-w-5xl" />
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }
